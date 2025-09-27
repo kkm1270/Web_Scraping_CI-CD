@@ -34,7 +34,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add sadiq_exchange_scraping.xlsx  # Keep Excel name as in your script
+        git add sadiq_exchange_scraping.xlsx  # Keep Excel name as in script
         git diff --staged --quiet || git commit -m "Update currency rates [$(date +'%Y-%m-%d %H:%M')]"
         git push
 
@@ -42,5 +42,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: currency-rates-excel
-        path: sadiq_exchange_scraping.xlsx  # Keep Excel name as in your script
+        path: sadiq_exchange_scraping.xlsx  # Keep Excel name as in script
         retention-days: 7

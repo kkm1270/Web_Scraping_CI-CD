@@ -1,0 +1,46 @@
+name: Scrape Currency Rates
+
+on:
+  schedule:
+    - cron: '* * * * *'  # Run every minute (adjust to '*/5 * * * *' for every 5 mins if needed)
+  workflow_dispatch:  # Allow manual trigger from Actions tab
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to commit back to repo
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # For committing
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 openpyxl
+
+    - name: Run scraping script
+      run: python sadiq_exchange_scraping.py
+
+    - name: Commit updated Excel
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add sadiq_exchange_scraping.xlsx
+        git diff --staged --quiet || git commit -m "Update currency rates [$(date +'%Y-%m-%d %H:%M')]"
+        git push
+
+    - name: Upload Excel as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: currency-rates-excel
+        path: sadiq_exchange_scraping.xlsx
+        retention-days: 7  # Keep artifacts for 7 days

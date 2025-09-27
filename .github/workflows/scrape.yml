@@ -28,13 +28,13 @@ jobs:
         pip install requests beautifulsoup4 openpyxl
 
     - name: Run scraping script
-      run: python sadiq_exchange_scraping.py  # Fixed: No scraping/ folder
+      run: python sadiq_exchange.py  # Fixed: Correct script name
 
     - name: Commit updated Excel
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add sadiq_exchange_scraping.xlsx  # Fixed: Excel in root
+        git add sadiq_exchange_scraping.xlsx  # Keep Excel name as in your script
         git diff --staged --quiet || git commit -m "Update currency rates [$(date +'%Y-%m-%d %H:%M')]"
         git push
 
@@ -42,5 +42,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: currency-rates-excel
-        path: sadiq_exchange_scraping.xlsx  # Fixed: Excel in root
+        path: sadiq_exchange_scraping.xlsx  # Keep Excel name as in your script
         retention-days: 7
